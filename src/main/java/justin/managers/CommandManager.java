@@ -13,7 +13,6 @@ import java.util.List;
 
 // ====================================
 // Manages dynamic command registration
-// Uses reflection to access Bukkit's CommandMap and register commands at runtime
 // ====================================
 public class CommandManager {
     
@@ -29,17 +28,18 @@ public class CommandManager {
     
     // ====================================
     // Register command dynamically via reflection
-    // Creates a custom Command instance that delegates to handlers
     // ====================================
     public void registerCommand(String baseCommand) {
         try {
             // Access the CommandMap via reflection
             Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
             commandMapField.setAccessible(true);
+
             CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
             
             // Create command instance with delegates to handlers
             Command command = new Command(baseCommand) {
+
                 @Override
                 public boolean execute(CommandSender sender, String label, String[] args) {
                     return commandHandler.handleCommand(sender, this.getName(), args);
@@ -53,6 +53,7 @@ public class CommandManager {
             
             // Register the command
             commandMap.register(plugin.getName(), command);
+            
             plugin.getLogger().info("AACommandsFiller is enabled! Registered command: /" + baseCommand);
         } catch (Exception e) {
             plugin.getLogger().severe("Failed to register command dynamically: " + e.getMessage());
