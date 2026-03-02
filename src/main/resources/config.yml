@@ -1,0 +1,85 @@
+# Base command name (e.g., tfmc will create /tfmc)
+base-command: tfmc
+
+# ========================================
+# COMMANDS - Command structure
+# ========================================
+# Just list the commands and their hierarchy
+# Don't worry about permissions here
+
+commands:
+
+  roll:
+    strength: {}
+    charisma: {}
+    dexterity: {}
+    constitution: {}
+    wisdom: {}
+    intelligence: {}
+    <number>:
+      <+/-><modifier>: {}
+
+  tips:
+    enable: {}
+    disable: {}
+
+  chatbubbles:
+    enable: {}
+    disable: {}
+    
+  pvp:
+    start: {}
+    nonlethal: {}
+    lethal: {}
+
+  pack:
+    auto: {}
+    manual: {}
+    
+  donatorname: {}
+  donatordoublename: {}
+  donatortriplename: {}
+  
+  booster: {}
+  date: {}
+  patreon: {}
+  statues: {}
+  help: {}
+  patterns: {}
+  masks: {}
+  claim: {}
+  starter: {}
+  map: {}
+  
+  worldboss:
+    info: {}
+  
+  class:
+    reset: {}
+
+  ban:
+    <playername>:
+      <reason>: {}
+
+  helper:
+    demote:
+      <playername>: {}
+    promote:
+      <playername>: {}
+
+# ========================================
+# PERMISSIONS - Who can see commands
+# ========================================
+# Format:  command-path: permission.node
+# Use dots for nested commands (e.g., helper.promote)
+# Leave out commands that everyone can see (e.g., help)
+
+# Multiple permissions (player needs ANY of them):
+# command: [permission1, permission2, permission3]
+
+permissions:
+  ban: tfmc.staff
+  
+  helper: [tfmc.helper, tfmc.admin]
+  helper.demote: tfmc.helper.demote
+  helper.promote: tfmc.helper.promote
