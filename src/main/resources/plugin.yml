@@ -1,5 +1,14 @@
 main: tfmc.justin.AACommandsFiller
-version: 2.0
+version: 2.1
 name: AACommandsFiller
 author: Justin
 api-version: 1.21
+commands:
+  aacommandsfiller:
+    description: AACommandsFiller admin command
+    usage: /aacommandsfiller reload
+    permission: aacommandsfiller.admin
+permissions:
+  aacommandsfiller.admin:
+    description: Allows reloading the AACommandsFiller config
+    default: op

@@ -1,5 +1,8 @@
 package tfmc.justin;
 
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import tfmc.justin.config.ConfigHelper;
 import tfmc.justin.handlers.CommandHandler;
@@ -7,26 +10,80 @@ import tfmc.justin.handlers.TabCompleteHandler;
 import tfmc.justin.managers.CommandManager;
 import tfmc.justin.validators.PermissionValidator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AACommandsFiller extends JavaPlugin {
+
+    private CommandManager commandManager;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        
-        ConfigHelper configHelper = new ConfigHelper(getConfig());
-        String baseCommand = configHelper.getBaseCommand();
-        
-        PermissionValidator permissionValidator = new PermissionValidator(configHelper);
-        
-        CommandHandler commandHandler = new CommandHandler(configHelper, permissionValidator, baseCommand);
-        TabCompleteHandler tabCompleteHandler = new TabCompleteHandler(configHelper, permissionValidator, baseCommand);
-        
-        CommandManager commandManager = new CommandManager(this, commandHandler, tabCompleteHandler);
-        commandManager.registerCommand(baseCommand);
+
+        commandManager = new CommandManager(this);
+        ConfigHelper configHelper = buildHandlers();
+        commandManager.registerCommand(configHelper.getBaseCommand());
     }
 
     @Override
     public void onDisable() {
+        // Remove the reflection-registered command so a live unload
+        // (e.g. PlugManX) doesn't leave a stale command behind
+        if (commandManager != null) {
+            commandManager.unregisterCommand();
+        }
         getLogger().info("AACommandsFiller is disabled! (makes conditional event commands visible in chat)");
+    }
+
+    // ====================================
+    // /aacommandsfiller reload
+    // ====================================
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+            reloadConfig();
+            ConfigHelper configHelper = buildHandlers();
+
+            // If base-command changed, re-register under the new name
+            String newBaseCommand = configHelper.getBaseCommand();
+            if (!newBaseCommand.equalsIgnoreCase(commandManager.getRegisteredCommandName())) {
+                commandManager.unregisterCommand();
+                commandManager.registerCommand(newBaseCommand);
+            }
+
+            sender.sendMessage(ChatColor.GREEN + "AACommandsFiller config reloaded.");
+            return true;
+        }
+
+        sender.sendMessage(ChatColor.RED + "Usage: /" + label + " reload");
+        return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length == 1 && "reload".startsWith(args[0].toLowerCase())) {
+            List<String> completions = new ArrayList<>();
+            completions.add("reload");
+            return completions;
+        }
+        return new ArrayList<>();
+    }
+
+    // ====================================
+    // Build config, validator, and handlers, and hand them to the
+    // command manager. Called on enable and on every reload.
+    // ====================================
+    private ConfigHelper buildHandlers() {
+        ConfigHelper configHelper = new ConfigHelper(getConfig());
+        String baseCommand = configHelper.getBaseCommand();
+
+        PermissionValidator permissionValidator = new PermissionValidator(configHelper);
+
+        commandManager.setHandlers(
+                new CommandHandler(configHelper, permissionValidator, baseCommand),
+                new TabCompleteHandler(configHelper, permissionValidator, baseCommand));
+
+        return configHelper;
     }
 }
