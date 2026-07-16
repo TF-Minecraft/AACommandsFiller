@@ -1,5 +1,6 @@
 package tfmc.justin.config;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
@@ -32,64 +33,53 @@ public class ConfigHelper {
     // ====================================
     public List<String> getPermissions(String... pathParts) {
         String commandPath = String.join(".", pathParts).toLowerCase();
-        List<String> permissions = new ArrayList<>();
-        
-        // Check singular permissions section first
-        Object permObj = config.get("permissions." + commandPath);
-        if (permObj != null) {
-            if (permObj instanceof List) {
 
-                // Multiple permissions (OR logic)
-                List<?> permList = (List<?>) permObj;
-                for (Object perm : permList) {
-                    if (perm != null && !perm.toString().isEmpty()) {
-                        permissions.add(perm.toString());
-                    }
-                }
-            } else {
-
-                //Singular permission
-                String permStr = permObj.toString();
-                if (!permStr.isEmpty()) {
-                    permissions.add(permStr);
-                }
-            }
-            
-            if (!permissions.isEmpty()) {
-                return permissions;
-            }
+        // Check the exact path first
+        List<String> permissions = readPermissionsAt("permissions." + commandPath);
+        if (!permissions.isEmpty()) {
+            return permissions;
         }
-        
+
         // Check parent paths (e.g., "helper" for "helper.demote")
         String[] parts = commandPath.split("\\.");
 
         for (int i = parts.length - 1; i > 0; i--) {
             String parentPath = String.join(".", java.util.Arrays.copyOfRange(parts, 0, i));
-            Object parentPermObj = config.get("permissions." + parentPath);
+            permissions = readPermissionsAt("permissions." + parentPath);
 
-            if (parentPermObj != null) {
-                if (parentPermObj instanceof List) {
-                    List<?> permList = (List<?>) parentPermObj;
+            if (!permissions.isEmpty()) {
+                return permissions;
+            }
+        }
 
-                    for (Object perm : permList) {
-                        if (perm != null && !perm.toString().isEmpty()) {
-                            permissions.add(perm.toString());
-                        }
-                    }
+        return permissions;
+    }
 
-                } else {
-                    String permStr = parentPermObj.toString();
-                    if (!permStr.isEmpty()) {
-                        permissions.add(permStr);
-                    }
-                }
+    // ====================================
+    // Read the permission entry at a config path
+    // Accepts a single string or a list of strings (OR logic)
+    // ====================================
+    private List<String> readPermissionsAt(String configPath) {
+        List<String> permissions = new ArrayList<>();
+        Object permObj = config.get(configPath);
 
-                if (!permissions.isEmpty()) {
-                    return permissions;
+        if (permObj == null) {
+            return permissions;
+        }
+
+        if (permObj instanceof List) {
+            for (Object perm : (List<?>) permObj) {
+                if (perm != null && !perm.toString().isEmpty()) {
+                    permissions.add(perm.toString());
                 }
             }
-        }        
-        
+        } else {
+            String permStr = permObj.toString();
+            if (!permStr.isEmpty()) {
+                permissions.add(permStr);
+            }
+        }
+
         return permissions;
     }
     
@@ -99,8 +89,11 @@ public class ConfigHelper {
     public List<String> getSubCommands(String... pathParts) {
         String path = "commands." + String.join(".", pathParts).toLowerCase();
 
-        if (config.contains(path)) {
-            return new ArrayList<>(config.getConfigurationSection(path).getKeys(false));
+        // Leaf entries may be scalars (e.g. "help: true") rather than
+        // sections, in which case there are no subcommands
+        ConfigurationSection section = config.getConfigurationSection(path);
+        if (section != null) {
+            return new ArrayList<>(section.getKeys(false));
         }
 
         return new ArrayList<>();
