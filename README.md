@@ -5,7 +5,7 @@
 ![Java](https://img.shields.io/badge/Java-21-orange?logo=openjdk&logoColor=white)
 ![Paper](https://img.shields.io/badge/Paper-1.21+-blue)
 ![Maven](https://img.shields.io/badge/Build-Maven-red?logo=apachemaven&logoColor=white)
-![Version](https://img.shields.io/badge/Version-2.0-green)
+![Version](https://img.shields.io/badge/Version-2.1-green)
 
 Built for the [TFMC](https://www.patreon.com/c/TFMCRP) roleplay server, where it runs in production filling tab-completions for commands handled by external event systems.
 
@@ -111,10 +111,10 @@ classDiagram
 
 ## Installation
 
-1. Drop `AACommandsFiller-2.0.jar` into your server's `plugins/` folder
-2. Start or restart the server (**will NOT work with PlugManX** — the command is registered via reflection at startup)
+1. Drop `AACommandsFiller-2.1.jar` into your server's `plugins/` folder
+2. Start or restart the server (or load with PlugManX — the command tree is pushed to online players on load and cleaned up on unload)
 3. Configure `plugins/AACommandsFiller/config.yml` as needed
-4. Restart the server to apply config changes
+4. Run `/aacommandsfiller reload` to apply config changes (requires `aacommandsfiller.admin`, default op)
 
 ### Requirements
 
