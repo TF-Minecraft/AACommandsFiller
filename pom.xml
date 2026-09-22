@@ -6,7 +6,7 @@
 
     <groupId>net.tfminecraft</groupId>
     <artifactId>AACommandsFiller</artifactId>
-    <version>2.1</version>
+    <version>main-SNAPSHOT</version>
 
     <name>AACommandsFiller</name>
     <url>tfminecraft.net</url>
