@@ -1,14 +1,14 @@
-package tfmc.justin;
+package net.tfminecraft.aacommandsfiller;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import tfmc.justin.config.ConfigHelper;
-import tfmc.justin.handlers.CommandHandler;
-import tfmc.justin.handlers.TabCompleteHandler;
-import tfmc.justin.managers.CommandManager;
-import tfmc.justin.validators.PermissionValidator;
+import net.tfminecraft.aacommandsfiller.config.ConfigHelper;
+import net.tfminecraft.aacommandsfiller.handlers.CommandHandler;
+import net.tfminecraft.aacommandsfiller.handlers.TabCompleteHandler;
+import net.tfminecraft.aacommandsfiller.managers.CommandManager;
+import net.tfminecraft.aacommandsfiller.validators.PermissionValidator;
 
 import java.util.ArrayList;
 import java.util.List;
