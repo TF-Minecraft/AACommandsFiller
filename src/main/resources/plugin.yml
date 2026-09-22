@@ -2,7 +2,7 @@ main: tfmc.justin.AACommandsFiller
 version: ${project.version}
 name: AACommandsFiller
 author: Justin
-api-version: 1.21
+api-version: '1.21.10'
 commands:
   aacommandsfiller:
     description: AACommandsFiller admin command
