@@ -1,4 +1,4 @@
-package tfmc.justin.managers;
+package net.tfminecraft.aacommandsfiller.managers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -6,8 +6,8 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import tfmc.justin.handlers.CommandHandler;
-import tfmc.justin.handlers.TabCompleteHandler;
+import net.tfminecraft.aacommandsfiller.handlers.CommandHandler;
+import net.tfminecraft.aacommandsfiller.handlers.TabCompleteHandler;
 
 import java.lang.reflect.Field;
 import java.util.List;

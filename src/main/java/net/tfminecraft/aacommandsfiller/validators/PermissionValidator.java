@@ -1,7 +1,7 @@
-package tfmc.justin.validators;
+package net.tfminecraft.aacommandsfiller.validators;
 
 import org.bukkit.command.CommandSender;
-import tfmc.justin.config.ConfigHelper;
+import net.tfminecraft.aacommandsfiller.config.ConfigHelper;
 
 import java.util.List;
 

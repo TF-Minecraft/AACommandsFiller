@@ -1,4 +1,4 @@
-package tfmc.justin.config;
+package net.tfminecraft.aacommandsfiller.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

@@ -1,8 +1,8 @@
-package tfmc.justin.handlers;
+package net.tfminecraft.aacommandsfiller.handlers;
 
 import org.bukkit.command.CommandSender;
-import tfmc.justin.config.ConfigHelper;
-import tfmc.justin.validators.PermissionValidator;
+import net.tfminecraft.aacommandsfiller.config.ConfigHelper;
+import net.tfminecraft.aacommandsfiller.validators.PermissionValidator;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-main: tfmc.justin.AACommandsFiller
+main: net.tfminecraft.aacommandsfiller.AACommandsFiller
 version: ${project.version}
 name: AACommandsFiller
 author: Justin
