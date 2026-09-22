@@ -1,6 +1,7 @@
 package net.tfminecraft.aacommandsfiller;
 
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -52,11 +53,11 @@ public class AACommandsFiller extends JavaPlugin {
                 commandManager.registerCommand(newBaseCommand);
             }
 
-            sender.sendMessage(ChatColor.GREEN + "AACommandsFiller config reloaded.");
+            sender.sendMessage(Component.text("AACommandsFiller config reloaded.", NamedTextColor.GREEN));
             return true;
         }
 
-        sender.sendMessage(ChatColor.RED + "Usage: /" + label + " reload");
+        sender.sendMessage(Component.text("Usage: /" + label + " reload", NamedTextColor.RED));
         return true;
     }
 
