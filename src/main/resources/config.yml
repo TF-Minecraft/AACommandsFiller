@@ -6,80 +6,59 @@ base-command: tfmc
 # ========================================
 # Just list the commands and their hierarchy
 # Don't worry about permissions here
+# Every entry must match a ConditionalEvents trigger; this plugin only
+# suggests commands, it does not run them
 
 commands:
-
-  roll:
-    strength: {}
-    charisma: {}
-    dexterity: {}
-    constitution: {}
-    wisdom: {}
-    intelligence: {}
-    <number>:
-      <+/-><modifier>: {}
 
   tips:
     enable: {}
     disable: {}
 
-  chatbubbles:
-    enable: {}
-    disable: {}
-    
-  pvp:
-    start: {}
-    nonlethal: {}
-    lethal: {}
-
   pack:
     auto: {}
     manual: {}
-    
-  donatorname: {}
-  donatordoublename: {}
-  donatortriplename: {}
-  
+
   booster: {}
   date: {}
+  drinks: {}
   patreon: {}
   statues: {}
-  help: {}
   patterns: {}
   masks: {}
-  claim: {}
-  starter: {}
   map: {}
-  
-  worldboss:
-    info: {}
-  
-  class:
-    reset: {}
 
   ban:
     <playername>:
       <reason>: {}
 
+  # ConditionalEvents matches these exactly, so they take no arguments
   helper:
-    demote:
-      <playername>: {}
-    promote:
-      <playername>: {}
+    promote: {}
+    demote: {}
+
+  helper+:
+    promote: {}
+    demote: {}
 
 # ========================================
 # PERMISSIONS - Who can see commands
 # ========================================
 # Format:  command-path: permission.node
 # Use dots for nested commands (e.g., helper.promote)
-# Leave out commands that everyone can see (e.g., help)
+# Leave out commands that everyone can see (e.g., date)
+# Keep these in step with the permission checks in ConditionalEvents
 
 # Multiple permissions (player needs ANY of them):
 # command: [permission1, permission2, permission3]
 
 permissions:
-  ban: tfmc.staff
-  
-  helper: [tfmc.helper, tfmc.admin]
-  helper.demote: tfmc.helper.demote
-  helper.promote: tfmc.helper.promote
+  ban: tfmc.helper
+
+  helper: [helper.promote, helper.demote]
+  helper.promote: helper.promote
+  helper.demote: helper.demote
+
+  helper+: [helper+.promote, helper+.demote]
+  helper+.promote: helper+.promote
+  helper+.demote: helper+.demote

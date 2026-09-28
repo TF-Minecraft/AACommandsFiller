@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 import net.tfminecraft.aacommandsfiller.config.ConfigHelper;
 import net.tfminecraft.aacommandsfiller.handlers.CommandHandler;
@@ -11,6 +12,7 @@ import net.tfminecraft.aacommandsfiller.handlers.TabCompleteHandler;
 import net.tfminecraft.aacommandsfiller.managers.CommandManager;
 import net.tfminecraft.aacommandsfiller.validators.PermissionValidator;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,7 +78,7 @@ public class AACommandsFiller extends JavaPlugin {
     // command manager. Called on enable and on every reload.
     // ====================================
     private ConfigHelper buildHandlers() {
-        ConfigHelper configHelper = new ConfigHelper(getConfig());
+        ConfigHelper configHelper = new ConfigHelper(getConfig(), loadPermissions());
         String baseCommand = configHelper.getBaseCommand();
 
         PermissionValidator permissionValidator = new PermissionValidator(configHelper);
@@ -86,5 +88,14 @@ public class AACommandsFiller extends JavaPlugin {
                 new TabCompleteHandler(configHelper, permissionValidator, baseCommand));
 
         return configHelper;
+    }
+
+    private ConfigurationSection loadPermissions() {
+        try {
+            return ConfigHelper.loadPermissions(new File(getDataFolder(), "config.yml"));
+        } catch (Exception e) {
+            getLogger().warning("Failed to read permissions from config.yml: " + e.getMessage());
+            return null;
+        }
     }
 }

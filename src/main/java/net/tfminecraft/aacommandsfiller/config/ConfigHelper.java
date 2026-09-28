@@ -1,8 +1,12 @@
 package net.tfminecraft.aacommandsfiller.config;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +17,23 @@ import java.util.List;
 public class ConfigHelper {
     
     private final FileConfiguration config;
-    
-    public ConfigHelper(FileConfiguration config) {
+    private final ConfigurationSection permissionEntries;
+
+    public ConfigHelper(FileConfiguration config, ConfigurationSection permissions) {
         this.config = config;
+        this.permissionEntries = permissions;
+    }
+
+    // ====================================
+    // Load the permissions section with its dotted keys kept intact
+    // Bukkit's default loader splits "helper.promote" into nested sections,
+    // which overwrites a parent entry such as "helper: [a, b]"
+    // ====================================
+    public static ConfigurationSection loadPermissions(File configFile) throws IOException, InvalidConfigurationException {
+        YamlConfiguration raw = new YamlConfiguration();
+        raw.options().pathSeparator('\0');
+        raw.load(configFile);
+        return raw.getConfigurationSection("permissions");
     }
     
     // ====================================
@@ -35,7 +53,7 @@ public class ConfigHelper {
         String commandPath = String.join(".", pathParts).toLowerCase();
 
         // Check the exact path first
-        List<String> permissions = readPermissionsAt("permissions." + commandPath);
+        List<String> permissions = readPermissionsAt(commandPath);
         if (!permissions.isEmpty()) {
             return permissions;
         }
@@ -45,7 +63,7 @@ public class ConfigHelper {
 
         for (int i = parts.length - 1; i > 0; i--) {
             String parentPath = String.join(".", java.util.Arrays.copyOfRange(parts, 0, i));
-            permissions = readPermissionsAt("permissions." + parentPath);
+            permissions = readPermissionsAt(parentPath);
 
             if (!permissions.isEmpty()) {
                 return permissions;
@@ -56,14 +74,15 @@ public class ConfigHelper {
     }
 
     // ====================================
-    // Read the permission entry at a config path
+    // Read the permission entry for a command path
     // Accepts a single string or a list of strings (OR logic)
     // ====================================
-    private List<String> readPermissionsAt(String configPath) {
+    private List<String> readPermissionsAt(String commandPath) {
         List<String> permissions = new ArrayList<>();
-        Object permObj = config.get(configPath);
+        Object permObj = permissionEntries != null ? permissionEntries.get(commandPath) : null;
 
-        if (permObj == null) {
+        // A nested section is not a permission node
+        if (permObj == null || permObj instanceof ConfigurationSection) {
             return permissions;
         }
 
